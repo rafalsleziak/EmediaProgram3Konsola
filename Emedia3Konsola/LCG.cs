@@ -13,31 +13,52 @@ namespace Emedia3Konsola
         private const ulong m = 34359738368;
         public ulong x;
 
-        public ulong Multiply(ulong a, ulong b, ulong m)  // obliczanie funkcji a*b % n
+        ulong Multiply(ulong a, ulong b, ulong n)
         {
-            ulong n, w;
+            ulong m, w;
 
-            w = 0; n = 1;
-            while (n != 0)
+            w = 0; m = 1;
+            while (m!=0)
             {
-                if (b != 0 && n != 0)
-                    w = (w + a) % m;
-                a = (a << 1) % m;
-                n <<= 1;
+                if (b!=0 & m!=0) w = (w + a) % n;
+                a = (a << 1) % n;
+                m <<= 1;
             }
             return w;
         }
 
+
+        private static ulong mult(ulong a, ulong x, ulong m)
+        {
+            ulong b, n, r;
+
+            r = 0;
+            n = 1;
+            b = 1;
+            while (n <= 64)
+            {
+                if ((a & b) != 0)
+                    r = (r + x) % m;
+                x = (x + x) % m;
+                b *= 2;
+                n++;
+            }
+
+            return r;
+        }
         void Ziarno()  // inicjowanie ziarna
         {
             TimeSpan span = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             x = (ulong)span.TotalSeconds;
+            Console.WriteLine(x);
+            Console.WriteLine();
         }
 
         public ulong LCGAlgorithm()  // generator
         {
-            x = Multiply(x, a, m);
+            x = mult(x, a, m);
             x = (x + c) % m;
+           // Console.WriteLine(x);
             return x;
         }
 
@@ -59,21 +80,19 @@ namespace Emedia3Konsola
             Console.WriteLine ("Podaj ile liczb wylosowac:);
             n=Convert.ToInt32(Console.ReadLine());*/
 
-            xz = 0;
-            y = 500000;
-            n = 10000;
+            xz = 2;
+            y = 1000;
+            n = 100;
 
-            Lxy = y - xz + 1;
+            Lxy = y - xz + 1; //rozpietosc w jakiej losujemy
 
-            for (int i = 0; i < n; i++)
+            for (int i = 1; i < n; i++)
             {
                 XR = LCGAlgorithm() / (double)m;
                 Wxy = (ulong)Math.Floor(XR * Lxy) + xz;
                 Console.WriteLine(Wxy);
             }
             Console.ReadKey();
-
-
         }
 
     }
